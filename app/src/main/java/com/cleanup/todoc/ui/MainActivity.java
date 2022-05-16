@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -15,16 +16,19 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cleanup.todoc.R;
+import com.cleanup.todoc.injections.ViewModelFactory;
 import com.cleanup.todoc.model.Project;
 import com.cleanup.todoc.model.Task;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 
 /**
  * <p>Home activity of the application which is displayed when the user opens the app.</p>
@@ -33,10 +37,16 @@ import java.util.Date;
  * @author Gaëtan HERFRAY
  */
 public class MainActivity extends AppCompatActivity implements TasksAdapter.DeleteTaskListener {
+
+    /**
+     * MainActivity ViewModel instance
+     */
+    private TaskViewModel mTaskViewModel;
+
     /**
      * List of all projects available in the application
      */
-    private final Project[] allProjects = Project.getAllProjects();
+    private List<Project> allProjects;
 
     /**
      * List of all current tasks of the application
@@ -90,7 +100,7 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
     private TextView lblNoTasks;
 
     /*********************************************************************************************
-     ** onCreate
+     ** UI
      ********************************************************************************************/
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -98,18 +108,27 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
 
         setContentView(R.layout.activity_main);
 
+        mTaskViewModel = new ViewModelProvider(this, ViewModelFactory.getInstance(this)).get(TaskViewModel.class);
+        mTaskViewModel.getAllTasks().observe(this, this::taskObserver);
+        mTaskViewModel.getProjects().observe(this, this::projectObserver);
+
         listTasks = findViewById(R.id.list_tasks);
         lblNoTasks = findViewById(R.id.lbl_no_task);
 
         listTasks.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         listTasks.setAdapter(adapter);
 
-        findViewById(R.id.fab_add_task).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showAddTaskDialog();
-            }
-        });
+        findViewById(R.id.fab_add_task).setOnClickListener(view -> showAddTaskDialog());
+    }
+
+    private void taskObserver(List<Task> taskList) {
+        tasks.clear();
+        tasks.addAll(taskList);
+        updateTasks();
+    }
+
+    private void projectObserver(List<Project> projectList) {
+        allProjects = projectList;
     }
 
     /*********************************************************************************************
@@ -144,7 +163,10 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
      ********************************************************************************************/
     @Override
     public void onDeleteTask(Task task) {
-        tasks.remove(task);
+        //TODO Remove this line ?
+        //tasks.remove(task);
+
+        mTaskViewModel.deleteTask(task);
         updateTasks();
     }
 
@@ -219,11 +241,10 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
             // If both project and name of the task have been set
             else if (taskProject != null) {
                 // TODO: Replace this by id of persisted task
-                long id = (long) (Math.random() * 50000);
-
+                //long id = (long) (Math.random() * 50000);
 
                 Task task = new Task(
-                        id,
+                        0,
                         taskProject.getId(),
                         taskName,
                         new Date().getTime()
@@ -250,7 +271,10 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
      * @param task the task to be added to the list
      */
     private void addTask(@NonNull Task task) {
-        tasks.add(task);
+        //TODO Remove this line ?
+        //tasks.add(task);
+
+        mTaskViewModel.addTask(task);
         updateTasks();
     }
 
