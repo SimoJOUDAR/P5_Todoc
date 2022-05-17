@@ -23,6 +23,10 @@ public class TaskRepository {
         return mTaskDao.getAllTasks();
     }
 
+    public LiveData<Task> getTaskById(long id) {
+        return mTaskDao.getTaskById(id);
+    }
+
     public void deleteTask(Task task) {
         mTaskDao.deleteTask(task);
     }

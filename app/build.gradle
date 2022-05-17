@@ -39,5 +39,8 @@ dependencies {
     annotationProcessor "androidx.room:room-compiler:2.4.2"
     testImplementation "androidx.room:room-testing:2.4.2"
 
+    //Room testing
+    androidTestImplementation "androidx.arch.core:core-testing:2.1.0"
+
     implementation 'com.google.android.material:material:1.6.0'
 }
