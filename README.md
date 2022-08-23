@@ -17,6 +17,9 @@ git clone https://github.com/SimoJOUDAR/P5_Todoc.git
 ## Run the App
 Once the project opened, you can run the App using Android studio's AVD to execute it.
 
+## Obfuscation
+The source code has obfuscation and shrinkResources enabled. It uses an external obfuscation dictionary available at https://bit.ly/3uGrnSu
+
 ## Generating signed APK
 From Android Studio:
 1. Go to ***Build*** menu
