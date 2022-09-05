@@ -17,7 +17,7 @@ public interface ProjectDao {
     void addProjects(Project[] project);
 
     @Query("SELECT * FROM Project WHERE id= :projectId")
-    LiveData<Project> getProject(long projectId);
+    Project getProjectById(long projectId);
 
     @Query("SELECT * FROM Project")
     LiveData<List<Project>> getAllProjects();

@@ -27,9 +27,7 @@ public abstract class TodocDatabase extends RoomDatabase {
                     .addCallback(new Callback() {
                         @Override
                         public void onCreate(@NonNull SupportSQLiteDatabase db) {
-                            for (Project project : Project.getAllProjects()) {
-                                Executors.newSingleThreadExecutor().execute(()-> instance.projectDao().addProjects(Project.getAllProjects()));
-                            }
+                            Executors.newSingleThreadExecutor().execute(()-> instance.projectDao().addProjects(Project.getAllProjects()));
                             super.onCreate(db);
                         }
                     })

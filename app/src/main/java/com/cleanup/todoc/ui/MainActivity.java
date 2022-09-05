@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
     /**
      * The adapter which handles the list of tasks
      */
-    private final TasksAdapter adapter = new TasksAdapter(tasks, this);
+    private TasksAdapter adapter;
 
     /**
      * The sort method to be used to display tasks
@@ -86,16 +86,14 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
     /**
      * The RecyclerView which displays the list of tasks
      */
-    // Suppress warning is safe because variable is initialized in onCreate
-    @SuppressWarnings("NullableProblems")
+
     @NonNull
     private RecyclerView listTasks;
 
     /**
      * The TextView displaying the empty state
      */
-    // Suppress warning is safe because variable is initialized in onCreate
-    @SuppressWarnings("NullableProblems")
+
     @NonNull
     private TextView lblNoTasks;
 
@@ -115,6 +113,7 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
         listTasks = findViewById(R.id.list_tasks);
         lblNoTasks = findViewById(R.id.lbl_no_task);
 
+        adapter = new TasksAdapter(tasks, this, mTaskViewModel.mProjectRepository);
         listTasks.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         listTasks.setAdapter(adapter);
 
@@ -163,7 +162,6 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
      ********************************************************************************************/
     @Override
     public void onDeleteTask(Task task) {
-        //tasks.remove(task);
         mTaskViewModel.deleteTask(task);
         updateTasks();
     }
@@ -267,7 +265,6 @@ public class MainActivity extends AppCompatActivity implements TasksAdapter.Dele
      * @param task the task to be added to the list
      */
     private void addTask(@NonNull Task task) {
-        //tasks.add(task);
         mTaskViewModel.addTask(task);
         updateTasks();
     }

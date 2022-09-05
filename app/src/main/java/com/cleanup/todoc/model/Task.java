@@ -30,8 +30,7 @@ public class Task {
     /**
      * The name of the task
      */
-    // Suppress warning because setName is called in constructor
-    @SuppressWarnings("NullableProblems")
+
     @NonNull
     private String name;
 

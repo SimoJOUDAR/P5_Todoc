@@ -42,7 +42,6 @@ public class ViewModelFactory implements ViewModelProvider.Factory {
         T viewModel = null;
         try {
             if (modelClass.isAssignableFrom(TaskViewModel.class)) {
-                //viewModel = (T) new TaskViewModel(mProjectRepository, mTaskRepository, mExecutor);
                 return viewModel = modelClass.getConstructor(ProjectRepository.class, TaskRepository.class, Executor.class).newInstance(mProjectRepository, mTaskRepository, mExecutor);
             }
         } catch (IllegalAccessException | InstantiationException | InvocationTargetException | NoSuchMethodException e) {

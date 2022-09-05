@@ -12,9 +12,9 @@ import java.util.List;
 import java.util.concurrent.Executor;
 
 public class TaskViewModel extends ViewModel {
-    ProjectRepository mProjectRepository;
-    TaskRepository mTaskRepository;
-    Executor mExecutor;
+    public final ProjectRepository mProjectRepository;
+    private final TaskRepository mTaskRepository;
+    private final Executor mExecutor;
 
     public TaskViewModel(ProjectRepository projectRepository, TaskRepository taskRepository, Executor executor) {
         mProjectRepository = projectRepository;

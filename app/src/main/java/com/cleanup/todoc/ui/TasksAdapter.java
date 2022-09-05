@@ -1,6 +1,7 @@
 package com.cleanup.todoc.ui;
 
 import android.content.res.ColorStateList;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.cleanup.todoc.R;
 import com.cleanup.todoc.model.Project;
 import com.cleanup.todoc.model.Task;
+import com.cleanup.todoc.repositories.ProjectRepository;
 
 import java.util.List;
 
@@ -35,13 +37,20 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.TaskViewHold
     private final DeleteTaskListener deleteTaskListener;
 
     /**
+     * The ProjectRepository needed to fetch a project from the database using the project's id
+     */
+    @NonNull
+    final ProjectRepository projectRepository;
+
+    /**
      * Instantiates a new TasksAdapter.
      *
      * @param tasks the list of tasks the adapter deals with to set
      */
-    TasksAdapter(@NonNull final List<Task> tasks, @NonNull final DeleteTaskListener deleteTaskListener) {
+    TasksAdapter(@NonNull final List<Task> tasks, @NonNull final DeleteTaskListener deleteTaskListener, @NonNull ProjectRepository projectRepository) {
         this.tasks = tasks;
         this.deleteTaskListener = deleteTaskListener;
+        this.projectRepository = projectRepository;
     }
 
     /**
@@ -150,15 +159,17 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.TaskViewHold
             lblTaskName.setText(task.getName());
             imgDelete.setTag(task);
 
-            final Project taskProject = task.getProject();
-            if (taskProject != null) {
-                imgProject.setSupportImageTintList(ColorStateList.valueOf(taskProject.getColor()));
-                lblProjectName.setText(taskProject.getName());
-            } else {
-                imgProject.setVisibility(View.INVISIBLE);
-                lblProjectName.setText("");
-            }
-
+            projectRepository.getProject(task.getProjectId(), taskProject -> {
+                if (taskProject != null) {
+                    Log.d("Adapter", "project is not null");
+                    imgProject.setSupportImageTintList(ColorStateList.valueOf(taskProject.getColor()));
+                    lblProjectName.setText(taskProject.getName());
+                } else {
+                    Log.d("Adapter", "project is null");
+                    imgProject.setVisibility(View.INVISIBLE);
+                    lblProjectName.setText("");
+                }
+            });
         }
     }
 }
